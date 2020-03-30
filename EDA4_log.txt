@@ -1,0 +1,582 @@
+
+                      Design Compiler Graphical
+                            DC Ultra (TM)
+                             DFTMAX (TM)
+                         Power Compiler (TM)
+                           DesignWare (R)
+                           DC Expert (TM)
+                         Design Vision (TM)
+                          HDL Compiler (TM)
+                         VHDL Compiler (TM)
+                            DFT Compiler
+                        Library Compiler (TM)
+                         Design Compiler(R)
+
+            Version G-2012.06 for RHEL64 -- May 30, 2012
+               Copyright (c) 1988-2012 Synopsys, Inc.
+
+This software and the associated documentation are confidential and 
+proprietary to Synopsys, Inc. Your use or disclosure of this software 
+is subject to the terms and conditions of a written license agreement 
+between you, or your company, and Synopsys, Inc.
+
+Initializing...
+sh date
+Mon Mar 30 16:38:31 CEST 2020
+############################i
+##  Source RTL FILE paths ##
+############################
+source ./scripts/rtl.tcl
+../gl_cpa.vhd ../gl_csa32.vhd ../gl_csa42.vhd ../gl_mux21.vhd ../out_sign.vhd ../partprod.vhd ../reg32b.vhd ../tree.vhd ../array24x24.vhd ../normalize1.vhd ../expadd.vhd ../expincrement.vhd ../expupdate.vhd ../significand_compute.vhd ../fpmul1.vhd 
+##########################################
+##  Setup logic and milkyway libraries  ##
+##########################################
+source ./scripts/setup.tcl
+-- CREATE NEW MW DESIGN LIB (create_mw_lib)
+Start to load technology file /cell_libs/cmos090_50a/adv_AvantiTechnoKit_cmos090_7M2T_M2V_AP_5.1/COMMON/tech.tf.
+Warning: Layer 'AP' is missing the attribute 'minArea'. (line 359) (TFCHK-012)
+Warning: ContactCode 'CONT1' is missing the attribute 'unitMinResistance'. (line 534) (TFCHK-014)
+Warning: ContactCode 'CONT1' is missing the attribute 'unitNomResistance'. (line 534) (TFCHK-014)
+Warning: ContactCode 'CONT1' is missing the attribute 'unitMaxResistance'. (line 534) (TFCHK-014)
+Warning: ContactCode 'CONT1' has undefined or zero enclosures. (line 534). (TFCHK-073)
+Warning: ContactCode 'AVNT_via1_VH' is missing the attribute 'unitMinResistance'. (line 551) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VH' is missing the attribute 'unitNomResistance'. (line 551) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VH' is missing the attribute 'unitMaxResistance'. (line 551) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VHFat' is missing the attribute 'unitMinResistance'. (line 568) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VHFat' is missing the attribute 'unitNomResistance'. (line 568) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VHFat' is missing the attribute 'unitMaxResistance'. (line 568) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HH' is missing the attribute 'unitMinResistance'. (line 585) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HH' is missing the attribute 'unitNomResistance'. (line 585) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HH' is missing the attribute 'unitMaxResistance'. (line 585) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HHFat' is missing the attribute 'unitMinResistance'. (line 602) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HHFat' is missing the attribute 'unitNomResistance'. (line 602) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HHFat' is missing the attribute 'unitMaxResistance'. (line 602) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HV' is missing the attribute 'unitMinResistance'. (line 621) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HV' is missing the attribute 'unitNomResistance'. (line 621) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HV' is missing the attribute 'unitMaxResistance'. (line 621) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HVFat' is missing the attribute 'unitMinResistance'. (line 638) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HVFat' is missing the attribute 'unitNomResistance'. (line 638) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_HVFat' is missing the attribute 'unitMaxResistance'. (line 638) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VV' is missing the attribute 'unitMinResistance'. (line 655) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VV' is missing the attribute 'unitNomResistance'. (line 655) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VV' is missing the attribute 'unitMaxResistance'. (line 655) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VVFat' is missing the attribute 'unitMinResistance'. (line 672) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VVFat' is missing the attribute 'unitNomResistance'. (line 672) (TFCHK-014)
+Warning: ContactCode 'AVNT_via1_VVFat' is missing the attribute 'unitMaxResistance'. (line 672) (TFCHK-014)
+Warning: ContactCode 'AVNT_via2' is missing the attribute 'unitMinResistance'. (line 689) (TFCHK-014)
+Warning: ContactCode 'AVNT_via2' is missing the attribute 'unitNomResistance'. (line 689) (TFCHK-014)
+Warning: ContactCode 'AVNT_via2' is missing the attribute 'unitMaxResistance'. (line 689) (TFCHK-014)
+Warning: ContactCode 'AVNT_via3' is missing the attribute 'unitMinResistance'. (line 706) (TFCHK-014)
+Warning: ContactCode 'AVNT_via3' is missing the attribute 'unitNomResistance'. (line 706) (TFCHK-014)
+Warning: ContactCode 'AVNT_via3' is missing the attribute 'unitMaxResistance'. (line 706) (TFCHK-014)
+Warning: ContactCode 'AVNT_via4' is missing the attribute 'unitMinResistance'. (line 723) (TFCHK-014)
+Warning: ContactCode 'AVNT_via4' is missing the attribute 'unitNomResistance'. (line 723) (TFCHK-014)
+Warning: ContactCode 'AVNT_via4' is missing the attribute 'unitMaxResistance'. (line 723) (TFCHK-014)
+Warning: ContactCode 'AVNT_via5' is missing the attribute 'unitMinResistance'. (line 740) (TFCHK-014)
+Warning: ContactCode 'AVNT_via5' is missing the attribute 'unitNomResistance'. (line 740) (TFCHK-014)
+Warning: ContactCode 'AVNT_via5' is missing the attribute 'unitMaxResistance'. (line 740) (TFCHK-014)
+Warning: ContactCode 'AVNT_via6' is missing the attribute 'unitMinResistance'. (line 757) (TFCHK-014)
+Warning: ContactCode 'AVNT_via6' is missing the attribute 'unitNomResistance'. (line 757) (TFCHK-014)
+Warning: ContactCode 'AVNT_via6' is missing the attribute 'unitMaxResistance'. (line 757) (TFCHK-014)
+Warning: ContactCode 'AVNT_via7' is missing the attribute 'unitMinResistance'. (line 772) (TFCHK-014)
+Warning: ContactCode 'AVNT_via7' is missing the attribute 'unitNomResistance'. (line 772) (TFCHK-014)
+Warning: ContactCode 'AVNT_via7' is missing the attribute 'unitMaxResistance'. (line 772) (TFCHK-014)
+Information: ContactCode 'AVNT_via7' has a minimum cut spacing 2 that is less than the cut layer minimum spacing 6. (line 772) (TFCHK-072)
+Warning: ContactCode 'AVNT_via2Fat' is missing the attribute 'unitMinResistance'. (line 789) (TFCHK-014)
+Warning: ContactCode 'AVNT_via2Fat' is missing the attribute 'unitNomResistance'. (line 789) (TFCHK-014)
+Warning: ContactCode 'AVNT_via2Fat' is missing the attribute 'unitMaxResistance'. (line 789) (TFCHK-014)
+Warning: ContactCode 'AVNT_via3Fat' is missing the attribute 'unitMinResistance'. (line 806) (TFCHK-014)
+Warning: ContactCode 'AVNT_via3Fat' is missing the attribute 'unitNomResistance'. (line 806) (TFCHK-014)
+Warning: ContactCode 'AVNT_via3Fat' is missing the attribute 'unitMaxResistance'. (line 806) (TFCHK-014)
+Warning: ContactCode 'AVNT_via4Fat' is missing the attribute 'unitMinResistance'. (line 823) (TFCHK-014)
+Warning: ContactCode 'AVNT_via4Fat' is missing the attribute 'unitNomResistance'. (line 823) (TFCHK-014)
+Warning: ContactCode 'AVNT_via4Fat' is missing the attribute 'unitMaxResistance'. (line 823) (TFCHK-014)
+Warning: ContactCode 'AVNT_via5Fat' is missing the attribute 'unitMinResistance'. (line 840) (TFCHK-014)
+Warning: ContactCode 'AVNT_via5Fat' is missing the attribute 'unitNomResistance'. (line 840) (TFCHK-014)
+Warning: ContactCode 'AVNT_via5Fat' is missing the attribute 'unitMaxResistance'. (line 840) (TFCHK-014)
+Warning: ContactCode 'AVNT_via6Fat' is missing the attribute 'unitMinResistance'. (line 857) (TFCHK-014)
+Warning: ContactCode 'AVNT_via6Fat' is missing the attribute 'unitNomResistance'. (line 857) (TFCHK-014)
+Warning: ContactCode 'AVNT_via6Fat' is missing the attribute 'unitMaxResistance'. (line 857) (TFCHK-014)
+Warning: Layer 'M1' has a pitch 0.28 that does not match the recommended wire-to-via pitch 0.295 or 0.25. (TFCHK-049)
+Warning: Layer 'M5' has a pitch 0.28 that does not match the recommended wire-to-via pitch 0.47 or 0.42. (TFCHK-049)
+Warning: Layer 'M7' has a pitch 0.84 that does not match the recommended wire-to-via pitch 2.83. (TFCHK-049)
+Warning: Layer 'AP' has a pitch 15 that does not match the recommended wire-to-via pitch 4.7. (TFCHK-049)
+Warning: Layer 'M3' has a pitch 0.28 that does not match the doubled pitch 0.56 or tripled pitch 0.84. (TFCHK-050)
+Warning: Layer 'M4' has a pitch 0.28 that does not match the doubled pitch 0.56 or tripled pitch 0.84. (TFCHK-050)
+Warning: Layer 'M5' has a pitch 0.28 that does not match the doubled pitch 0.56 or tripled pitch 0.84. (TFCHK-050)
+Warning: Layer 'AP' has a pitch 15 that does not match the doubled pitch 1.68 or tripled pitch 2.52. (TFCHK-050)
+Warning: CapModel sections are missing. Capacitance models should be loaded with a TLU+ file later. (TFCHK-084)
+Technology file /cell_libs/cmos090_50a/adv_AvantiTechnoKit_cmos090_7M2T_M2V_AP_5.1/COMMON/tech.tf has been loaded successfully.
+
+------------------- Internal Reference Library Settings -----------------
+
+Library    /home/s154227/async/MW_FPMULT
+  Reference    /cell_libs/cmos090_50a/adv_AvantiTechnoKit_cmos090_7M2T_M2V_AP_5.1/COMMON/UnitTile/unitTile_STD
+  Reference    /cell_libs/cmos090_50a/CORE90GPSVT_SNPS-AVT_2.1/AVANTI/PR/bc_1.10V_m40C_wc_0.90V_105C/CORE90GPSVT
+  Reference    /cell_libs/cmos090_50a/CORE90GPHVT_SNPS-AVT_2.1.a/AVANTI/PR/bc_1.10V_m40C_wc_0.90V_105C/CORE90GPHVT
+
+
+------------------- Control File Reference Library Settings -----------
+
+Library    /home/s154227/async/MW_FPMULT
+  Reference    /cell_libs/cmos090_50a/adv_AvantiTechnoKit_cmos090_7M2T_M2V_AP_5.1/COMMON/UnitTile/unitTile_STD
+  Reference    /cell_libs/cmos090_50a/CORE90GPSVT_SNPS-AVT_2.1/AVANTI/PR/bc_1.10V_m40C_wc_0.90V_105C/CORE90GPSVT
+  Reference    /cell_libs/cmos090_50a/CORE90GPHVT_SNPS-AVT_2.1.a/AVANTI/PR/bc_1.10V_m40C_wc_0.90V_105C/CORE90GPHVT
+-------------------------------------------------------------------------
+
+Warning: Reference Library Inconsistent With Main Library
+Reference Library: /cell_libs/cmos090_50a/adv_AvantiTechnoKit_cmos090_7M2T_M2V_AP_5.1/COMMON/UnitTile/unitTile_STD (MWLIBP-300)
+Warning: Inconsistent Number Of Metal Layers:
+	8 (Main Library) <==> 7 (Reference Library). (MWLIBP-301)
+Warning: Inconsistent Data for Layer 40
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_CELLIMP|	CELLIMP
+	Mask Name      (null string)|	CELLIMP	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 63
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_ippid  |	ippid
+	Mask Name      (null string)|	ippid	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 23
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_LIL    |	LIL
+	Mask Name      (null string)|	LIL	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 24
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_ELEC1  |	ELEC1
+	Mask Name      (null string)|	ELEC1	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 27
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_ELEC2  |	ELEC2
+	Mask Name      (null string)|	ELEC2	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 28
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_CELLVT |	CELLVT
+	Mask Name      (null string)|	CELLVT	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 18
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_N2V    |	N2V
+	Mask Name      (null string)|	N2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 19
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_P2V    |	P2V
+	Mask Name      (null string)|	P2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 20
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_PP2V   |	PP2V
+	Mask Name      (null string)|	PP2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 22
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_CTDRAM |	CTDRAM
+	Mask Name      (null string)|	CTDRAM	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 11
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_PW2V   |	PW2V
+	Mask Name      (null string)|	PW2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 12
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_VTNCELL|	VTNCELL
+	Mask Name      (null string)|	VTNCELL	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 13
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_N1V    |	N1V
+	Mask Name      (null string)|	N1V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 14
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_P1V    |	P1V
+	Mask Name      (null string)|	P1V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 5
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_GATED  |	MKR
+	Mask Name      (null string)|	MKR	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 7
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_sense  |	sense
+	Mask Name      (null string)|	sense	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 9
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_NW2V   |	NW2V
+	Mask Name      (null string)|	NW2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 10
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_PW     |	PW
+	Mask Name      (null string)|	PW	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 65
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_MKR    |	EXTD
+	Mask Name      (null string)|	EXTD	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 150
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_BOTMIM |	tileNot
+	Mask Name      (null string)|	tileNot	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 2
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_MGI    |	plateC
+	Mask Name      (null string)|	plateC	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 4
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     dummy_MDL    |	fringeC
+	Mask Name      (null string)|	fringeC	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 115
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     rpdmy_MKR    |	res_PO	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 43
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Layer Name     CB2          |	CB
+	Mask Name      (null string)|	CB	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 42
+	Main Library (MW_FPMULT)    |	Reference Library (unitTile_STD)
+	Mask Name      metal8       |	AP	 (MWLIBP-319)
+Warning: Inconsistent Data for Contact Code 27
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M6 (30, 80)       |	M6 (80, 30)
+	Upper Layer     M7 (80, 30)       |	M7 (30, 80)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 3
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M2 (5, 50)        |	M2 (50, 5)
+	Upper Layer     M3 (50, 5)        |	M3 (5, 50)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 4
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M3 (50, 5)        |	M3 (5, 50)
+	Upper Layer     M4 (5, 50)        |	M4 (50, 5)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 5
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M4 (5, 50)        |	M4 (50, 5)
+	Upper Layer     M5 (50, 5)        |	M5 (5, 50)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 6
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M5 (80, 30)       |	M5 (30, 80)
+	Upper Layer     M6 (30, 80)       |	M6 (80, 30)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 7
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M6 (30, 80)       |	M6 (80, 30)
+	Upper Layer     M7 (80, 30)       |	M7 (30, 80)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 23
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M2 (5, 50)        |	M2 (50, 5)
+	Upper Layer     M3 (50, 5)        |	M3 (5, 50)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 24
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M3 (50, 5)        |	M3 (5, 50)
+	Upper Layer     M4 (5, 50)        |	M4 (50, 5)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 25
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M4 (5, 50)        |	M4 (50, 5)
+	Upper Layer     M5 (50, 5)        |	M5 (5, 50)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 26
+	Main Library (MW_FPMULT)          |	Reference Library (unitTile_STD)
+	Lower Layer     M5 (80, 30)       |	M5 (30, 80)
+	Upper Layer     M6 (30, 80)       |	M6 (80, 30)	 (MWLIBP-324)
+Warning: Reference Library Inconsistent With Main Library
+Reference Library: /cell_libs/cmos090_50a/CORE90GPSVT_SNPS-AVT_2.1/AVANTI/PR/bc_1.10V_m40C_wc_0.90V_105C/CORE90GPSVT (MWLIBP-300)
+Warning: Inconsistent Number Of Metal Layers:
+	8 (Main Library) <==> 7 (Reference Library). (MWLIBP-301)
+Warning: Inconsistent Data for Layer 40
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_CELLIMP|	CELLIMP
+	Mask Name      (null string)|	CELLIMP	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 63
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_ippid  |	ippid
+	Mask Name      (null string)|	ippid	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 23
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_LIL    |	LIL
+	Mask Name      (null string)|	LIL	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 24
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_ELEC1  |	ELEC1
+	Mask Name      (null string)|	ELEC1	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 27
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_ELEC2  |	ELEC2
+	Mask Name      (null string)|	ELEC2	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 28
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_CELLVT |	CELLVT
+	Mask Name      (null string)|	CELLVT	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 18
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_N2V    |	N2V
+	Mask Name      (null string)|	N2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 19
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_P2V    |	P2V
+	Mask Name      (null string)|	P2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 20
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_PP2V   |	PP2V
+	Mask Name      (null string)|	PP2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 22
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_CTDRAM |	CTDRAM
+	Mask Name      (null string)|	CTDRAM	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 11
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_PW2V   |	PW2V
+	Mask Name      (null string)|	PW2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 12
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_VTNCELL|	VTNCELL
+	Mask Name      (null string)|	VTNCELL	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 13
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_N1V    |	N1V
+	Mask Name      (null string)|	N1V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 14
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_P1V    |	P1V
+	Mask Name      (null string)|	P1V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 5
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_GATED  |	MKR
+	Mask Name      (null string)|	MKR	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 7
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_sense  |	sense
+	Mask Name      (null string)|	sense	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 9
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_NW2V   |	NW2V
+	Mask Name      (null string)|	NW2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 10
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_PW     |	PW
+	Mask Name      (null string)|	PW	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 65
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_MKR    |	EXTD
+	Mask Name      (null string)|	EXTD	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 150
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_BOTMIM |	tileNot
+	Mask Name      (null string)|	tileNot	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 2
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_MGI    |	plateC
+	Mask Name      (null string)|	plateC	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 4
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     dummy_MDL    |	fringeC
+	Mask Name      (null string)|	fringeC	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 43
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Layer Name     CB2          |	CB
+	Mask Name      (null string)|	CB	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 42
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPSVT)
+	Mask Name      metal8       |	AP	 (MWLIBP-319)
+Warning: Inconsistent Data for Contact Code 2
+	Main Library (MW_FPMULT)          |	Reference Library (CORE90GPSVT)
+	Upper Layer     M2 (50, 5)        |	M2 (5, 5)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 32
+	Main Library (MW_FPMULT)          |	Reference Library (CORE90GPSVT)
+	Upper Layer     M2 (50, 5)        |	M2 (5, 5)	 (MWLIBP-324)
+Warning: Reference Library Inconsistent With Main Library
+Reference Library: /cell_libs/cmos090_50a/CORE90GPHVT_SNPS-AVT_2.1.a/AVANTI/PR/bc_1.10V_m40C_wc_0.90V_105C/CORE90GPHVT (MWLIBP-300)
+Warning: Inconsistent Number Of Metal Layers:
+	8 (Main Library) <==> 7 (Reference Library). (MWLIBP-301)
+Warning: Inconsistent Data for Layer 40
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_CELLIMP|	CELLIMP
+	Mask Name      (null string)|	CELLIMP	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 63
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_ippid  |	ippid
+	Mask Name      (null string)|	ippid	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 23
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_LIL    |	LIL
+	Mask Name      (null string)|	LIL	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 24
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_ELEC1  |	ELEC1
+	Mask Name      (null string)|	ELEC1	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 27
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_ELEC2  |	ELEC2
+	Mask Name      (null string)|	ELEC2	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 28
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_CELLVT |	CELLVT
+	Mask Name      (null string)|	CELLVT	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 18
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_N2V    |	N2V
+	Mask Name      (null string)|	N2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 19
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_P2V    |	P2V
+	Mask Name      (null string)|	P2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 20
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_PP2V   |	PP2V
+	Mask Name      (null string)|	PP2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 22
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_CTDRAM |	CTDRAM
+	Mask Name      (null string)|	CTDRAM	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 11
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_PW2V   |	PW2V
+	Mask Name      (null string)|	PW2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 12
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_VTNCELL|	VTNCELL
+	Mask Name      (null string)|	VTNCELL	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 13
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_N1V    |	N1V
+	Mask Name      (null string)|	N1V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 14
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_P1V    |	P1V
+	Mask Name      (null string)|	P1V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 5
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_GATED  |	MKR
+	Mask Name      (null string)|	MKR	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 7
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_sense  |	sense
+	Mask Name      (null string)|	sense	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 9
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_NW2V   |	NW2V
+	Mask Name      (null string)|	NW2V	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 10
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_PW     |	PW
+	Mask Name      (null string)|	PW	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 65
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_MKR    |	EXTD
+	Mask Name      (null string)|	EXTD	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 150
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_BOTMIM |	tileNot
+	Mask Name      (null string)|	tileNot	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 2
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_MGI    |	plateC
+	Mask Name      (null string)|	plateC	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 4
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     dummy_MDL    |	fringeC
+	Mask Name      (null string)|	fringeC	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 43
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Layer Name     CB2          |	CB
+	Mask Name      (null string)|	CB	 (MWLIBP-319)
+Warning: Inconsistent Data for Layer 42
+	Main Library (MW_FPMULT)    |	Reference Library (CORE90GPHVT)
+	Mask Name      metal8       |	AP	 (MWLIBP-319)
+Warning: Inconsistent Data for Contact Code 2
+	Main Library (MW_FPMULT)          |	Reference Library (CORE90GPHVT)
+	Upper Layer     M2 (50, 5)        |	M2 (5, 5)	 (MWLIBP-324)
+Warning: Inconsistent Data for Contact Code 32
+	Main Library (MW_FPMULT)          |	Reference Library (CORE90GPHVT)
+	Upper Layer     M2 (50, 5)        |	M2 (5, 5)	 (MWLIBP-324)
+Error: unknown command 'set_tlu_plus_files' (CMD-005)
+true
+################
+##  READ RTL  ##
+################
+set top_module multiplier
+multiplier
+analyze -library WORK -format vhdl {./src/multiplier.v}
+Running PRESTO HDLC
+Error:  Unable to open file `./src/multiplier.v': No such file or directory. (VER-41)
+*** Presto compilation terminated with 1 errors. ***
+Loading db file '/cell_libs/cmos090_50a/CORE90GPSVT_SNPS-AVT_2.1/SIGNOFF/bc_1.10V_m40C_wc_0.90V_105C/PT_LIB/CORE90GPSVT_NomLeak.db'
+Loading db file '/cell_libs/cmos090_50a/CORE90GPHVT_SNPS-AVT_2.1.a/SIGNOFF/bc_1.10V_m40C_wc_0.90V_105C/PT_LIB/CORE90GPHVT_NomLeak.db'
+Loading db file '/apps/synopsys/DC/G-2012.06/libraries/syn/dw_foundation.sldb'
+0
+elaborate ${top_module} -architecture vhdl -lib WORK
+Loading db file '/apps/synopsys/DC/G-2012.06/libraries/syn/gtech.db'
+Loading db file '/apps/synopsys/DC/G-2012.06/libraries/syn/standard.sldb'
+  Loading link library 'CORE90GPSVT'
+  Loading link library 'CORE90GPHVT'
+  Loading link library 'gtech'
+Error: Can't find the architecture 'multiplier(vhdl)' in the library 'WORK'
+0
+###############################
+##  READ TIMING CONSTRAINTS  ##
+###############################
+set PERIOD 30.0
+30.0
+#create_clock -name "CLK" -period $PERIOD [get_ports clk]
+create_clock -name "clk" -period 2 -waveform { 0.000 15.000  }  { clk  }
+Error: Current design is not defined. (UID-4)
+Error: Can't find object 'clk'. (UID-109)
+Error: Value for list 'source_objects' must have 1 elements. (CMD-036)
+0
+current_design ${top_module}
+Error: Can't find design 'multiplier'. (UID-109)
+Error: Current design is not defined. (UID-4)
+uniquify
+Error: Current design is not defined. (UID-4)
+0
+link
+Error: Current design is not defined. (UID-4)
+0
+#######################
+##      Compile      ##
+#######################
+current_design ${top_module}
+Error: Can't find design 'multiplier'. (UID-109)
+Error: Current design is not defined. (UID-4)
+compile_ultra
+Error: Current design is not defined. (UID-4)
+0
+################
+##  DATA OUT  ##
+################
+change_names -rule verilog -hier
+Error: Current design is not defined. (UID-4)
+0
+write -f verilog -h -out ./db/compile.v
+Error: No files or designs were specified. (UID-22)
+0
+write -f ddc -h -out ./db/compile.ddc
+Error: No files or designs were specified. (UID-22)
+0
+write_sdc -nosplit ./db/compile.sdc
+Error: Current design is not defined. (UID-4)
+0
+write_link -nosplit -out ./db/compile.link
+Error: Current design is not defined. (UID-4)
+0
+set mw_design_library ./MW_SoC
+./MW_SoC
+write_milkyway -out compile -over
+Error: No files or designs were specified. (UID-22)
+0
+## REPORT
+#########
+check_mv_design -verbose > ./report/mv_check_compile.rpt
+Error: could not open output redirect file "./report/mv_check_compile.rpt" (CMD-015)
+report_cell > ./report/cells.rpt
+Error: could not open output redirect file "./report/cells.rpt" (CMD-015)
+report_area > ./report/area.rpt
+Error: could not open output redirect file "./report/area.rpt" (CMD-015)
+#report_hier -nosplit -noleaf
+report_timing -att               -net               -trans               -cap               -input               -nosplit > ./report/${top_module}_timing.rpt
+Error: could not open output redirect file "./report/multiplier_timing.rpt" (CMD-015)
+report_timing -path full -delay max -nworst 1 -max_paths 1 -significant_digits 3 -sort_by group > ./report/${top_module}_cp.rpt
+Error: could not open output redirect file "./report/multiplier_cp.rpt" (CMD-015)
+report_power -hier -hier_level 1 -verb > ./report/${top_module}_power.rpt
+Error: could not open output redirect file "./report/multiplier_power.rpt" (CMD-015)
+####################
+##  Generate SDF  ##
+####################
+write -hierarchy -format verilog -output multiplier-syn.v
+Error: No files or designs were specified. (UID-22)
+0
+write_sdf multiplier-syn.sdf
+Error: Current design is not defined. (UID-4)
+0
+sh date
+Mon Mar 30 16:38:34 CEST 2020
+exit
+
+Thank you...
