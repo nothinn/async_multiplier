@@ -57,7 +57,7 @@ architecture Behavioral of multiplier is
     
 
 begin
-    process(all)
+    process(clk,rst)
     begin
         if rst = '1' then
             a_reg <= (others => '0');
