@@ -29,7 +29,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity CSA is
     Generic(
         BITWIDTH : integer := 16;
-        CSA_DELAY: time := time
+        CSA_DELAY: time := 4ns
     );
     Port ( 
         CSA_in_0 : in std_logic_vector(BITWIDTH-1 downto 0);

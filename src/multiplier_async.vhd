@@ -30,12 +30,12 @@
 -- amux             yes
 -- bmux             yes
 -- csademuxin       yes
--- noaddsink        no
--- CSA              no
--- csaclick0        no
+-- noaddsink        yes
+-- CSA              yes, needs to match delay on rec/ack
+-- csaclick0        no,
 -- csaclick1        no
 -- csademuxout      no
--- csajoin          no
+-- csajoin          yes, needs 'a' input from csamux
 -- csamux           no
 -- donefork0        yes
 -- donefork1        yes
@@ -162,6 +162,18 @@ architecture Behavior of multiplier_async is
     signal csa_demux_in_fwc_req : std_logic;
     signal csa_demux_in_fwc_ack : std_logic;
     signal csa_demux_in_fwc_data : std_logic_vector(BITWIDTH*2 - 1 downto 0);
+
+    signal CSA_join_fw_req : std_logic;
+    signal CSA_join_fw_ack : std_logic;
+
+    signal CSA_carry : std_logic_vector(BITWIDTH*2-1 downto 0);
+    signal CSA_sum : std_logic_vector(BITWIDTH*2-1 downto 0);
+
+    signal CSA_click_0_fw_req : std_logic;
+    signal CSA_click_0_fw_ack : std_logic;
+    signal CSA_click_0_fw_data : std_logic_vector(BITWIDTH*2 - 1 downto 0);
+
+    
 
     
 begin
@@ -476,10 +488,53 @@ begin
             outB_data => csa_demux_in_fwb_data,
             outB_ack => csa_demux_in_fwb_ack,
             -- Output channel 2
-            outC_req => csa_demux_in_fwb_req,
-            outC_data => csa_demux_in_fwb_data,
-            outC_ack => csa_demux_in_fwb_ack
+            outC_req => csa_demux_in_fwc_req,
+            outC_data => csa_demux_in_fwc_data,
+            outC_ack => csa_demux_in_fwc_ack
             );
+
+        
+    NO_ADD_SINK : entity work.sink
+        generic map(
+            BITWIDTH => BITWIDTH*2,
+            sink_delay => sink_delay
+        );
+        port(
+            req_in  => csa_demux_in_fwb_req,
+            ack_out => csa_demux_in_fwb_ack,
+            data_in => csa_demux_in_fwb_data
+        );
+
+    CSA_JOIN : entity work.join
+        generic map(
+            PHASE_INIT => '0' --TODO verify phase
+        );
+        port(
+            rst => rst,
+            --UPSTREAM channels
+            inA_req     : in std_logic; --CSA mux
+            inA_ack     : out std_logic;--CSA mux
+            inB_req => csa_demux_in_fwc_req,
+            inB_ack => csa_demux_in_fwc_ack,
+            --DOWNSTREAM channel
+            outC_req => CSA_join_fw_req,
+            outC_ack => CSA_join_fw_ack
+
+        )
+
+    CSA1 : entity work.CSA
+        generic map(
+            BITWIDTH => BITWIDTH*2,
+            CSA_DELAY => CSA_DELAY
+        )
+        port(
+            CSA_in_0 => --TODO wire this up to carry from CSA_MUX
+            CSA_in_1 => --TODO wire this up to sum from CSA_MUX
+            CSA_in_2 => csa_demux_in_fwb_data,
+
+            CSA_out_S => CSA_sum,
+            CSA_out_C => CSA_carry
+        )
 
 
 
