@@ -31,12 +31,12 @@
 -- bmux             yes
 -- csademuxin       yes
 -- noaddsink        yes
--- CSA              yes, needs to match delay on rec/ack
--- csaclick0        no,
--- csaclick1        no
--- csademuxout      no
--- csajoin          yes, needs 'a' input from csamux
--- csamux           no
+-- CSA              yes
+-- csaclick0        yes
+-- csaclick1        yes
+-- csademuxout      yes
+-- csajoin          yes
+-- csamux           yes, needs 0-input
 -- donefork0        yes
 -- donefork1        yes
 -- donefork2        yes
@@ -173,8 +173,25 @@ architecture Behavior of multiplier_async is
     signal CSA_click_0_fw_ack : std_logic;
     signal CSA_click_0_fw_data : std_logic_vector(BITWIDTH*2 - 1 downto 0);
 
-    
 
+    signal CSA_click_0_fw_req : std_logic;
+    signal CSA_click_0_fw_ack : std_logic;
+    signal CSA_click_0_fw_data : std_logic_vector(BITWIDTH*2*2-1 downto 0); --*2*2 due to carry and sum
+    
+    signal CSA_click_1_fw_req : std_logic;
+    signal CSA_click_1_fw_ack : std_logic;
+    signal CSA_click_1_fw_data : std_logic_vector(BITWIDTH*2*2-1 downto 0); --*2*2 due to carry and sum
+    
+    signal csa_demux_out_fwb_req : std_logic;
+    signal csa_demux_out_fwb_ack : std_logic;
+    signal csa_demux_out_fwb_data : std_logic_vector(BITWIDTH*2*2 - 1 downto 0);
+    signal csa_demux_out_fwc_req : std_logic;
+    signal csa_demux_out_fwc_ack : std_logic;
+    signal csa_demux_out_fwc_data : std_logic_vector(BITWIDTH*2*2 - 1 downto 0);
+
+    signal csa_mux_fw_req : std_logic;
+    signal csa_mux_fw_ack : std_logic;
+    signal csa_mux_fw_data : std_logic_vector(BITWIDTH*2*2 - 1 downto 0);
     
 begin
 
@@ -512,8 +529,8 @@ begin
         port(
             rst => rst,
             --UPSTREAM channels
-            inA_req     : in std_logic; --CSA mux
-            inA_ack     : out std_logic;--CSA mux
+            inA_req => csa_mux_fw_req,
+            inA_ack => csa_mux_fw_ack,
             inB_req => csa_demux_in_fwc_req,
             inB_ack => csa_demux_in_fwc_ack,
             --DOWNSTREAM channel
@@ -528,14 +545,143 @@ begin
             CSA_DELAY => CSA_DELAY
         )
         port(
-            CSA_in_0 => --TODO wire this up to carry from CSA_MUX
-            CSA_in_1 => --TODO wire this up to sum from CSA_MUX
+            CSA_in_0 => csa_demux_out_fwb_data(BITWIDTH*2-1 downto 0),
+            CSA_in_1 => csa_demux_out_fwb_data(BITWIDTH*2*2-1 downto BITWIDTH*2),
             CSA_in_2 => csa_demux_in_fwb_data,
 
             CSA_out_S => CSA_sum,
             CSA_out_C => CSA_carry
         )
 
+
+
+    csa_delay_reg : entity work.delay_element_sim
+        generic map(
+            delay => CSA_DELAY * SAFETY_MARGIN
+        )
+        port map(
+            d => CSA_join_fw_req,
+            z => CSA_join_fw_delayed_req
+        );
+
+
+    csa_delay_ack : entity work.delay_element_sim
+        generic map(
+            delay => CSA_DELAY * SAFETY_MARGIN
+        )
+        port map(
+            d => CSA_join_fw_ack,
+            z => CSA_join_fw_delayed_ack
+        );
+
+
+    csa_click_0 : entity work.click_element
+        generic map(
+            DATA_WIDTH => BITWIDTH*2*2,
+            VALUE => 0,
+            PHASE_INIT => '1' --TODO check phase
+        )
+        port map(
+            rst => rst,
+            -- Input channel
+            in_ack => CSA_join_fw_delayed_ack,
+            in_req => CSA_join_fw_delayed_req,
+            in_data =>  CSA_sum & CSA_carry,
+            -- Output channel
+            out_req => CSA_click_0_fw_req,
+            out_data => CSA_click_0_fw_data,
+            out_ack => CSA_click_0_fw_ack
+        );
+
+
+    csa_click_1 : entity work.click_element
+        generic map(
+            DATA_WIDTH => BITWIDTH*2*2,
+            VALUE => 0,
+            PHASE_INIT => '1' --TODO check phase
+        )
+        port map(
+            rst => rst,
+            -- Input channel
+            in_ack => CSA_click_0_fw_ack,
+            in_req => CSA_click_0_fw_req,
+            in_data =>  CSA_click_0_fw_data,
+            -- Output channel
+            out_req => CSA_click_1_fw_req,
+            out_data => CSA_click_1_fw_data,
+            out_ack => CSA_click_1_fw_ack
+        );
+
+
+
+    CSA_DEMUX_OUT : entity work.demux
+        generic map(
+            PHASE_INIT_A => '1', --TODO consider INIT
+            PHASE_INIT_B => '0',
+            PHASE_INIT_C => '0'
+        );
+        port(
+            rst => rst,
+            -- Input port
+            inA_req => CSA_click_1_fw_req,
+            inA_data => b_click_1_fw_data,
+            inA_ack => CSA_click_1_fw_ack,
+            -- Select port 
+            inSel_req => done_fork_2_fwb_req,
+            inSel_ack => done_fork_2_fwb_ack,
+            selector => nor_fw_data,
+            -- Output channel 1
+            outB_req => csa_demux_out_fwb_req,   --TODO Verify that the selector decides the intented output
+            outB_data => csa_demux_out_fwb_data,
+            outB_ack => csa_demux_out_fwb_ack,
+            -- Output channel 2
+            outC_req => csa_demux_out_fwc_req,
+            outC_data => csa_demux_out_fwc_data,
+            outC_ack => csa_demux_out_fwc_ack
+            );
+
+
+    RES_SINK : entity work.sink
+    generic map(
+        BITWIDTH => BITWIDTH*2*2,
+        sink_delay => sink_delay
+    );
+    port(
+        req_in  => csa_demux_out_fwc_req,
+        ack_out => csa_demux_out_fwc_ack,
+        data_in => csa_demux_out_fwc_data
+    );
+
+
+
+    csa_mux : entity work.mux
+        --generic for initializing the phase registers
+        generic map (
+           DATA_WIDTH => BITWIDTH*2*2,
+           PHASE_INIT_C => '0', --TODO check init values
+           PHASE_INIT_A => '1',
+           PHASE_INIT_B => '0',
+           PHASE_INIT_SEL => '1'
+        );
+        port(
+          rst => rst,
+          -- Input from channel 1
+          inA_req => --TODO add 0 input
+          inA_data => (others => '0'),
+          inA_ack => 
+          -- Input from channel 2
+          inB_req => csa_demux_out_fwb_req,
+          inB_data => csa_demux_out_fwb_data,
+          inB_ack => csa_demux_out_fwb_ack,
+          -- Output port 
+          outC_req => csa_mux_fw_req,
+          outC_data => csa_mux_fw_data,
+          outC_ack => csa_mux_fw_req,
+          -- Select port
+          inSel_req => done_fork_1_fwb_req,
+          inSel_ack => done_fork_1_fwb_ack,
+          selector => nor_fw_data
+          );
 
 
 end Behavior;
