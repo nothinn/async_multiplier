@@ -36,7 +36,7 @@
 -- csaclick1        yes
 -- csademuxout      yes
 -- csajoin          yes
--- csamux           yes, needs 0-input
+-- csamux           yes, needs 0-input verification
 -- donefork0        yes
 -- donefork1        yes
 -- donefork2        yes
@@ -188,6 +188,9 @@ architecture Behavior of multiplier_async is
     signal csa_demux_out_fwc_req : std_logic;
     signal csa_demux_out_fwc_ack : std_logic;
     signal csa_demux_out_fwc_data : std_logic_vector(BITWIDTH*2*2 - 1 downto 0);
+
+    signal csa_reset_src_req : std_logic;
+    signal csa_reset_src_ack : std_logic;
 
     signal csa_mux_fw_req : std_logic;
     signal csa_mux_fw_ack : std_logic;
@@ -652,7 +655,14 @@ begin
         data_in => csa_demux_out_fwc_data
     );
 
-
+    CSA_RESET_SOURCE : entity work.source 
+    generic map( -- TODO check this component
+        source_delay => source_delay
+    );
+    port(
+        req_out => csa_reset_src_req,
+        ack_in  => csa_reset_src_ack
+    );
 
     csa_mux : entity work.mux
         --generic for initializing the phase registers
@@ -666,9 +676,9 @@ begin
         port(
           rst => rst,
           -- Input from channel 1
-          inA_req => --TODO add 0 input
+          inA_req => csa_reset_src_req,
           inA_data => (others => '0'),
-          inA_ack => 
+          inA_ack => csa_reset_src_ack,
           -- Input from channel 2
           inB_req => csa_demux_out_fwb_req,
           inB_data => csa_demux_out_fwb_data,
