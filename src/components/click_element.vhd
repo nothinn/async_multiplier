@@ -9,7 +9,7 @@ use work.defs.all;
 
 entity click_element is
   generic ( 
-    DATA_WIDTH: natural := DATA_WIDTH;
+    DATA_WIDTH: natural := 16;
     VALUE     : natural := 0;
     PHASE_INIT: std_logic := '0');
   port (rst   : in std_logic;

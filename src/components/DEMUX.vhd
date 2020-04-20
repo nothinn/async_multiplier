@@ -10,7 +10,8 @@ entity demux is
   generic(
     PHASE_INIT_A  : std_logic := '0';
     PHASE_INIT_B  : std_logic := '0';
-    PHASE_INIT_C  : std_logic := '0'
+    PHASE_INIT_C  : std_logic := '0';
+    DATA_WIDTH    : integer := 16
   );
   port(
     rst           : in  std_logic;
@@ -55,7 +56,7 @@ begin
   click_req <= (inSel_req and not(phase_a) and inA_req) or (not(inSel_req) and phase_a and not(inA_req)) after ANDOR3_DELAY + NOT1_DELAY;
   
   -- Acknowledge FF clock function
-  click_ack <= (outB_ack xnor phase_b) and (outC_ack xnor phase_c) after AND2_DELAY + XOR_DELAY + NOT1_DELAY;
+  click_ack <= transport (outB_ack xnor phase_b) and (outC_ack xnor phase_c) after AND2_DELAY + XOR_DELAY + NOT1_DELAY;
 
   req : process(click_req, rst)
     begin

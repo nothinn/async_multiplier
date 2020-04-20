@@ -7,7 +7,7 @@ use work.defs.all;
 
 entity mux is
   --generic for initializing the phase registers
-  generic(DATA_WIDTH      : natural := DATA_WIDTH;
+  generic(DATA_WIDTH      : natural := 16;
      PHASE_INIT_C : std_logic := '0';
      PHASE_INIT_A   : std_logic := '0';
      PHASE_INIT_B   : std_logic := '0';
@@ -36,12 +36,12 @@ end mux;
 architecture arch of mux is
   
   -- the registers
-  signal phase_c, phase_sel, inSel_token : std_logic;
+  signal phase_c, phase_sel, inSel_token : std_logic := '0';
   -- register control
   signal phase_a : std_logic;
   signal phase_b : std_logic;
   -- Clock
-  signal click_req, click_ack : std_logic;
+  signal click_req, click_ack : std_logic := '0';
   signal pulse : std_logic;
   -- control gates
   signal inA_token, inB_token : std_logic;
@@ -65,7 +65,7 @@ begin
   inSel_token <= phase_sel xor inSel_req after XOR_DELAY;
   
   --Selector triggered pulse
-  click_req <= (inA_token and inSel_token) or (inB_token and inSel_token) after AND2_DELAY + OR2_DELAY;
+  click_req <=  ((inA_token and inSel_token and selector(0)) or (inB_token and inSel_token and not selector(0))) after AND2_DELAY + OR2_DELAY;
   
   --Output state
   click_ack <= phase_c xnor outC_ack after XOR_DELAY;

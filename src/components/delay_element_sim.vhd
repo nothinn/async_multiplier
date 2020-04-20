@@ -9,7 +9,7 @@ use  unisim.vcomponents.lut1;
 
 entity  delay_element_sim  is
   generic(
-    delay : time 10 ps
+    delay : time := 10ps);
   port (
     d     : in std_logic; -- Data  in
     z     : out std_logic);

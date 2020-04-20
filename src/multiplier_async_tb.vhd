@@ -125,8 +125,8 @@ begin
             req_in <= not req_in;
             
 
-            a_in <= lfsr1_out;
-            b_in <= lfsr1_out;
+            a_in <= std_logic_vector(to_unsigned(5,32));-- lfsr1_out;
+            b_in <= std_logic_vector(to_unsigned(7,32));--lfsr1_out;
             
 
             -- Wait until req_out triggers

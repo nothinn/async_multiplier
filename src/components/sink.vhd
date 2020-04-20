@@ -24,5 +24,5 @@ architecture Behavior of sink is
 
 
 begin
-    in_ack <= transport in_req after sink_delay;
+    ack_out <= transport req_in after sink_delay;
 end Behavior;
