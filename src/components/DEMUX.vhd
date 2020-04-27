@@ -42,6 +42,13 @@ architecture Behavioral of demux is
   signal phase_b : std_logic;
   signal phase_c : std_logic;
 
+  attribute dont_touch : string;
+  attribute dont_touch of  phase_a : signal is "true";
+  attribute dont_touch of  phase_b : signal is "true";
+  attribute dont_touch of  phase_c : signal is "true";
+  attribute dont_touch of  click_req : signal is "true"; 
+  attribute dont_touch of  click_ack : signal is "true"; 
+
 begin
     
   -- Control Path   

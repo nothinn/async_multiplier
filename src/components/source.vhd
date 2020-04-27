@@ -19,6 +19,13 @@ end source;
 
 architecture Behavior of source is
 
+    signal internal : std_logic;
+
+    attribute dont_touch : string;
+    attribute dont_touch of internal : signal is "true";
+    
+
 begin
-    req_out <= transport not(ack_in) after source_delay;
+    internal <= transport not(ack_in) after source_delay;
+    req_out <= internal;
 end Behavior;

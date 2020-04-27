@@ -21,8 +21,16 @@ end sink;
 
 
 architecture Behavior of sink is
+    
+    signal notted : std_logic;
+
+    attribute dont_touch : string;
+    attribute dont_touch of notted : signal is "true";
+    
 
 
 begin
-    ack_out <= transport req_in after sink_delay;
+
+    notted <= transport not(req_in) after sink_delay; 
+    ack_out <= not notted;
 end Behavior;

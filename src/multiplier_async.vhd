@@ -58,9 +58,9 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity multiplier_async is
-    Generic(
-        BITWIDTH : integer := 16
-    );
+    --Generic(
+    --    BITWIDTH : integer := 8 
+    --);
     Port ( 
         rst : in std_logic;
     --Handshake ports
@@ -73,16 +73,19 @@ entity multiplier_async is
         ack_in : in std_logic;
         
 
+        start : in std_logic;
 
         --Data
-        a_in : in std_logic_vector(BITWIDTH - 1 downto 0);
-        b_in : in std_logic_vector(BITWIDTH - 1 downto 0);
-        result_out : out std_logic_vector(BITWIDTH*2 - 1 downto 0)
+        a_in : in std_logic_vector(8 - 1 downto 0);
+        b_in : in std_logic_vector(8 - 1 downto 0);
+        result_out : out std_logic_vector(8 *2 - 1 downto 0)
     );
 
 end multiplier_async;
     
 architecture Behavior of multiplier_async is
+
+    CONSTANT BITWIDTH : integer := 8;
 
 
     --DELAY SIGNALS
@@ -167,6 +170,8 @@ architecture Behavior of multiplier_async is
     signal done_demux_fwc_ack : std_logic;
     signal done_demux_fwc_data : std_logic_vector(0 downto 0);
 
+    signal done_demux_selector : std_logic;
+
     signal done_fork_1_fwt_req : std_logic;
     signal done_fork_1_fwt_ack : std_logic;
     signal done_fork_1_fwb_req : std_logic;
@@ -191,6 +196,24 @@ architecture Behavior of multiplier_async is
     signal done_fork_5_fwt_ack : std_logic;
     signal done_fork_5_fwb_req : std_logic;
     signal done_fork_5_fwb_ack : std_logic;
+
+    signal done_fork_6_fwt_req : std_logic;
+    signal done_fork_6_fwt_ack : std_logic;
+    signal done_fork_6_fwb_req : std_logic;
+    signal done_fork_6_fwb_ack : std_logic;
+
+    signal done_fork_7_fwt_req : std_logic;
+    signal done_fork_7_fwt_ack : std_logic;
+    signal done_fork_7_fwb_req : std_logic;
+    signal done_fork_7_fwb_ack : std_logic;
+
+    signal demux_sel_delay_req : std_logic;
+    signal csa_demux_in_req : std_logic;
+    signal a_join_fw_req : std_logic;
+    signal a_join_fw_ack : std_logic;
+
+    signal b_join_fw_req : std_logic;
+    signal b_join_fw_ack : std_logic;
 
     signal b_mux_fw_req : std_logic;
     signal b_mux_fw_ack : std_logic;
@@ -218,6 +241,10 @@ architecture Behavior of multiplier_async is
     signal csa_demux_fwc_ack : std_logic;
     signal csa_demux_fwc_data : std_logic_vector(BITWIDTH*2 - 1 downto 0);
 
+    signal CSA_demux_in_selector : std_logic;
+    signal CSA_demux_in_data : std_logic_vector(BITWIDTH*2 - 1 downto 0);
+    
+
     signal CSA_join_fw_req : std_logic;
     signal CSA_join_fw_ack : std_logic;
 
@@ -241,8 +268,13 @@ architecture Behavior of multiplier_async is
     signal CSA_click_1_fw_ack : std_logic;
     signal CSA_click_1_fw_data : std_logic_vector(BITWIDTH*2*2-1 downto 0); --*2*2 due to carry and sum
     
+    
     signal reset_barrier_a_click1 : std_logic;
     signal reset_barrier_CSA_click1 : std_logic;
+
+    attribute dont_touch : string;
+    attribute dont_touch of reset_barrier_a_click1 : signal is "true";
+    attribute dont_touch of reset_barrier_CSA_click1 : signal is "true";
     
 
     signal csa_demux_out_fwb_req : std_logic;
@@ -258,6 +290,8 @@ architecture Behavior of multiplier_async is
     signal csa_mux_fw_req : std_logic;
     signal csa_mux_fw_ack : std_logic;
     signal csa_mux_fw_data : std_logic_vector(BITWIDTH*2*2 - 1 downto 0);
+
+    signal result : std_logic_vector(BITWIDTH*2 - 1 downto 0);
     
 begin
 
@@ -320,7 +354,7 @@ begin
         );
 
 
-    reset_barrier_a_click1 <= a_click_1_fw_req and not rst;
+    reset_barrier_a_click1 <= a_click_1_fw_req and start;
 
     a_fork_0 : entity work.fork
         generic map( 
@@ -340,6 +374,17 @@ begin
         );
 
 
+    demux_sel_delay : entity work.delay_element
+        generic map(
+            size => 1
+        )
+        port map(
+            d => a_join_fw_req,
+            z => demux_sel_delay_req
+        );
+    done_demux_selector <= a_click_1_fw_data(0) or nor_fw_data;
+
+
     done_demux : entity work.demux
         generic map(
             DATA_WIDTH   => 1,
@@ -350,13 +395,13 @@ begin
         port map(
             rst => rst,
             -- Input port
-            inA_req => done_fork_0_fwb_req,
+            inA_req => done_fork_6_fwt_req,
             inA_data => (others => '0'),
-            inA_ack => done_fork_0_fwb_ack,
+            inA_ack => done_fork_6_fwt_ack,
             -- Select port 
             inSel_req => a_fork_2_fwt_req,  
             inSel_ack => a_fork_2_fwt_ack,
-            selector => a_click_1_fw_data(0),
+            selector => done_demux_selector,
             -- Output channel 1
             outB_req => done_demux_fwb_req,   
             outB_data => done_demux_fwb_data,
@@ -443,8 +488,8 @@ begin
         port map(
          rst => rst,
          -- Input channel
-         inA_req => a_fork_1_fwb_req,
-         inA_ack => a_fork_1_fwb_ack,
+         inA_req => demux_sel_delay_req,
+         inA_ack => a_join_fw_ack,
          -- Output channel 1
          outB_req => a_fork_2_fwt_req,
          outB_ack => a_fork_2_fwt_ack,
@@ -554,7 +599,74 @@ begin
              outC_req => done_fork_5_fwb_req,
              outC_ack => done_fork_5_fwb_ack
             );
+
+    done_fork_6 : entity work.fork
+            generic map( 
+              PHASE_INIT => '0'  
+            ) 
+            port map(
+             rst => rst,
+             -- Input channel
+             inA_req => done_fork_0_fwb_req,
+             inA_ack => done_fork_0_fwb_ack,
+             -- Output channel 1
+             outB_req => done_fork_6_fwt_req,
+             outB_ack => done_fork_6_fwt_ack,
+             -- Output channel 2
+             outC_req => done_fork_6_fwb_req,
+             outC_ack => done_fork_6_fwb_ack
+            );
+
+    done_fork_7 : entity work.fork
+            generic map( 
+              PHASE_INIT => '0'  
+            ) 
+            port map(
+             rst => rst,
+             -- Input channel
+             inA_req => done_fork_6_fwb_req,
+             inA_ack => done_fork_6_fwb_ack,
+             -- Output channel 1
+             outB_req => done_fork_7_fwt_req,
+             outB_ack => done_fork_7_fwt_ack,
+             -- Output channel 2
+             outC_req => done_fork_7_fwb_req,
+             outC_ack => done_fork_7_fwb_ack
+            );
     
+    a_join : entity work.join
+        generic map(
+            PHASE_INIT => '0' --TODO verify phase
+        )
+        port map(
+            rst => rst,
+            --UPSTREAM channels
+            inA_req => done_fork_7_fwb_req,
+            inA_ack => done_fork_7_fwb_ack,
+            inB_req => a_fork_1_fwb_req,
+            inB_ack => a_fork_1_fwb_ack,
+            --DOWNSTREAM channel
+            outC_req => a_join_fw_req,
+            outC_ack => a_join_fw_ack
+
+        );
+
+        b_join : entity work.join
+        generic map(
+            PHASE_INIT => '0' --TODO verify phase
+        )
+        port map(
+            rst => rst,
+            --UPSTREAM channels
+            inA_req => done_fork_7_fwt_req,
+            inA_ack => done_fork_7_fwt_ack,
+            inB_req => b_fork_0_fwb_req,
+            inB_ack => b_fork_0_fwb_ack,
+            --DOWNSTREAM channel
+            outC_req => b_join_fw_req,
+            outC_ack => b_join_fw_ack
+
+        );
     
     
     a_mux : entity work.mux
@@ -640,7 +752,7 @@ begin
           );
           
 
-    b_click_1_fw_data_shift <= b_click_1_fw_data(BITWIDTH*2-2 downto 0) & '0';
+    b_click_1_fw_data_shift <= (b_click_1_fw_data(BITWIDTH*2-2 downto 0) & '0');
     B_DEMUX_IN : entity work.demux
           generic map(
               DATA_WIDTH   => BITWIDTH*2,
@@ -713,6 +825,18 @@ begin
             selector(0) => nor_fw_data
             );
 
+
+    CSA_demux_in_selector <= a_click_1_fw_data(0) or nor_fw_data;
+    csa_demux_in_delay : entity work.delay_element
+        generic map(
+            size => 1
+        )
+        port map(
+            d => b_join_fw_req,
+            z => csa_demux_in_req
+        );
+
+    CSA_demux_in_data <= b_click_1_fw_data when nor_fw_data = '0' else (others => '0');
     CSA_DEMUX_IN : entity work.demux
         generic map(
             DATA_WIDTH   => BITWIDTH*2,
@@ -723,13 +847,13 @@ begin
         port map(
             rst => rst,
             -- Input port
-            inA_req => b_fork_0_fwb_req,
-            inA_data => b_click_1_fw_data,
-            inA_ack => b_fork_0_fwb_ack,
+            inA_req => csa_demux_in_req,
+            inA_data => CSA_demux_in_data,
+            inA_ack => b_join_fw_ack,
             -- Select port 
             inSel_req => a_fork_2_fwb_req,
             inSel_ack => a_fork_2_fwb_ack,
-            selector => a_click_1_fw_data(0),
+            selector => CSA_demux_in_selector,
             -- Output channel 1
             outB_req => csa_demux_fwb_req,   --TODO Verify that the selector decides the intented output
             outB_data => csa_demux_fwb_data,
@@ -775,8 +899,8 @@ begin
             CSA_DELAY => CSA_DELAY
         )
         port map(
-            CSA_in_0 => csa_demux_out_fwb_data(BITWIDTH*2-1 downto 0),
-            CSA_in_1 => csa_demux_out_fwb_data(BITWIDTH*2*2-1 downto BITWIDTH*2),
+            CSA_in_0 => csa_mux_fw_data(BITWIDTH*2-1 downto 0),
+            CSA_in_1 => csa_mux_fw_data(BITWIDTH*2*2-1 downto BITWIDTH*2),
             CSA_in_2 => csa_demux_fwb_data,
 
             CSA_out_S => CSA_sum,
@@ -785,14 +909,23 @@ begin
 
 
 
-    csa_delay_reg : entity work.delay_element_sim
+    csa_delay_req : entity work.delay_element
         generic map(
-            delay => CSA_DELAY * SAFETY_MARGIN
+            size => 6
         )
         port map(
             d => CSA_join_fw_req,
             z => CSA_join_fw_delayed_req
         );
+
+--    csa_delay_reg : entity work.delay_element_sim
+--        generic map(
+--            delay => CSA_DELAY * SAFETY_MARGIN
+--        )
+--        port map(
+--            d => CSA_join_fw_req,
+--            z => CSA_join_fw_delayed_req
+--        );
 
 
 --    csa_delay_ack : entity work.delay_element_sim
@@ -805,7 +938,7 @@ begin
 --        );
 
 
-    CSA_click_0_data_in <= CSA_sum & CSA_carry;
+    CSA_click_0_data_in <= CSA_sum & (CSA_carry(BITWIDTH*2-2 downto 0) & '0');
     csa_click_0 : entity work.decoupled_hs_reg
         generic map(
             DATA_WIDTH => BITWIDTH*2*2,
@@ -843,7 +976,7 @@ begin
             out_ack => CSA_click_1_fw_ack
         );
 
-    reset_barrier_CSA_click1 <= CSA_click_1_fw_req AND NOT RST;
+    reset_barrier_CSA_click1 <= CSA_click_1_fw_req AND start;
 
 
 
@@ -875,16 +1008,24 @@ begin
             );
 
 
-    RES_SINK : entity work.sink
-    generic map(
-        BITWIDTH => BITWIDTH*2*2,
-        sink_delay => sink_delay
-    )
-    port map(
-        req_in  => csa_demux_out_fwc_req,
-        ack_out => csa_demux_out_fwc_ack,
-        data_in => csa_demux_out_fwc_data
-    );
+    
+--    RES_SINK : entity work.sink
+--    generic map(
+--        BITWIDTH => BITWIDTH*2*2,
+--        sink_delay => sink_delay
+--    )
+--    port map(
+--        req_in  => csa_demux_out_fwc_req,
+--        ack_out => csa_demux_out_fwc_ack,
+--        data_in => csa_demux_out_fwc_data
+--    );
+    req_out <= csa_demux_out_fwc_req;
+    csa_demux_out_fwc_ack <= ack_in;
+
+    result_out <= std_logic_vector( unsigned(csa_demux_out_fwc_data(BITWIDTH*2*2-1 downto BITWIDTH*2)) + unsigned(csa_demux_out_fwc_data(BITWIDTH*2-1    downto 0)));
+    
+
+
 
     CSA_RESET_SOURCE : entity work.source 
     generic map( -- TODO check this component
@@ -926,8 +1067,14 @@ begin
 
 --TODO:
 --  Fix flushing
---  Fix req-ack to input
+--  Fix req-ack to input - Look ok
+--  Fix req-ack to output
 --  Add results
 --  Fix req-out for tb
+-- we have added or gate neglecting delay
+
+
+-- man kan lave en renerer demux sink løsning
+-- annoter handhaske kritrier på figu
 
 end Behavior;

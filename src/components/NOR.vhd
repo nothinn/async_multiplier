@@ -50,9 +50,15 @@ architecture Behavior of NOR_gate is
 begin
     -- TODO Implement delay
 
-    out_req <= in_req;
+    nor_delay_lut : entity work.delay_element
+        generic map(
+            size => 4
+        )
+        port map(
+            d => in_req,
+            z => out_req
+        );
     in_ack <= out_ack;
-
     result  <= nor_reduce(in_bus);
 
 end Behavior;
